@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment1">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                style="@style/input"
+                android:id="@+id/input1"/>
+            <Spinner
+                style="@style/spinner"
+                android:id="@+id/currencySpinner1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                style="@style/input"
+                android:enabled="false"
+                android:focusable="false"
+                android:inputType="none"
+                android:id="@+id/output2"/>
+            <Spinner
+                style="@style/spinner"
+                android:id="@+id/currencySpinner2"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                style="@style/input"
+                android:enabled="false"
+                android:focusable="false"
+                android:inputType="none"
+                android:id="@+id/output3"/>
+            <Spinner
+                style="@style/spinner"
+                android:id="@+id/currencySpinner3"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                style="@style/input"
+                android:enabled="false"
+                android:focusable="false"
+                android:inputType="none"
+                android:id="@+id/output4"/>
+            <Spinner
+                style="@style/spinner"
+                android:id="@+id/currencySpinner4"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

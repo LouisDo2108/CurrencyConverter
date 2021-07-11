@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ViewPager2</string>
+    <string name="lorem_ipsum">Lorem ipsum...</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loremipsum">LoremIpsum</string>
+    <string name="darkmode">Dark Mode</string>
+    <string-array name="currencies">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>VND</item>
+    </string-array>
+</resources>
