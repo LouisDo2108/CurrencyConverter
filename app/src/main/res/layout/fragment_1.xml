@@ -9,65 +9,76 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
+                android:id="@+id/input1"
                 style="@style/input"
-                android:id="@+id/input1"/>
+                android:text="0.0"
+                android:inputType="number"
+                android:selectAllOnFocus="true" />
+
             <Spinner
-                style="@style/spinner"
-                android:id="@+id/currencySpinner1"/>
+                android:id="@+id/currencySpinner1"
+                style="@style/spinner" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
+                android:id="@+id/output2"
                 style="@style/input"
-                android:enabled="false"
+                android:text="0.0"
                 android:focusable="false"
-                android:inputType="none"
-                android:id="@+id/output2"/>
+                android:inputType="number"/>
+
             <Spinner
-                style="@style/spinner"
-                android:id="@+id/currencySpinner2"/>
+                android:id="@+id/currencySpinner2"
+                style="@style/spinner" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
+                android:id="@+id/output3"
+                android:text="0.0"
                 style="@style/input"
-                android:enabled="false"
                 android:focusable="false"
-                android:inputType="none"
-                android:id="@+id/output3"/>
+                android:inputType="number" />
+
             <Spinner
-                style="@style/spinner"
-                android:id="@+id/currencySpinner3"/>
+                android:id="@+id/currencySpinner3"
+                style="@style/spinner" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
+                android:id="@+id/output4"
                 style="@style/input"
-                android:enabled="false"
+                android:text="0.0"
                 android:focusable="false"
-                android:inputType="none"
-                android:id="@+id/output4"/>
+                android:inputType="number"/>
+
             <Spinner
-                style="@style/spinner"
-                android:id="@+id/currencySpinner4"/>
+                android:id="@+id/currencySpinner4"
+                style="@style/spinner" />
         </LinearLayout>
 
     </LinearLayout>
