@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -12,6 +13,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -51,6 +55,9 @@ public class Fragment1 extends Fragment {
     private Double[] rates = {1.0, 0.0, 0.0, 0.0};
     private ArrayList<EditText> etArray = new ArrayList<>();
     private ArrayList<Spinner> spArray = new ArrayList<>();
+    private LayoutInflater themedInflater;
+    private View view;
+    private int spinnerLayout = 0, spinnerColor = 0;
 
     public Fragment1() {
         // Required empty public constructor
@@ -87,9 +94,7 @@ public class Fragment1 extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        LayoutInflater themedInflater;
-        View view;
-        int spinnerLayout, spinnerColor;
+
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             themedInflater = LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.Theme_ViewPager2Night));
             view = themedInflater.inflate(R.layout.fragment_1, container, false);
@@ -101,12 +106,47 @@ public class Fragment1 extends Fragment {
             spinnerLayout = R.layout.spinner_light;
             spinnerColor = R.color.black;
         }
-        
+
         variablesSetup(view);
+        setHasOptionsMenu(true);
         spinnerSetup(spinnerLayout, spinnerColor);
         textChanged();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.darkmode:
+                darkMode(item);
+                return true;
+            case R.id.refresh:
+                refresh(item);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void darkMode(MenuItem item) {
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+    }
+
+    public void refresh(MenuItem item) {
+        updateRates();
+        Toast.makeText(getContext(), "Rates refreshed", Toast.LENGTH_SHORT).show();
     }
 
     private void variablesSetup(View view)
@@ -151,17 +191,20 @@ public class Fragment1 extends Fragment {
 
                         for(int i = 1; i <= 3; ++i)
                             etArray.get(i).setText("");
-                        
                         return;
                     }
+                    updateRates();
 
-                    for(int i = 1; i <= 3; ++i)
-                        exchange(i);
                 } catch (Exception e) {
                     Log.e("Main", e.toString());
                 }
             }
         });
+    }
+
+    private void updateRates(){
+        for(int i = 1; i <= 3; ++i)
+            exchange(i);
     }
 
     private void getApiResult(String currencyRate, int index) {
@@ -238,4 +281,12 @@ public class Fragment1 extends Fragment {
         double convertedValue = (Double) Double.valueOf(et1.getText().toString()) * rates[index];
         etArray.get(index).setText(String.valueOf(convertedValue));
     }
+
+//    public void darkMode(MenuItem item) {
+//        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        }
+//    }
 }
