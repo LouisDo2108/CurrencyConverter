@@ -1,18 +1,21 @@
 <resources>
-    <string name="app_name">ViewPager2</string>
+    <string name="app_name">Currency Converter Pro Max</string>
     <string name="lorem_ipsum">Lorem ipsum...</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loremipsum">LoremIpsum</string>
     <string name="darkmode">Dark Mode</string>
     <string name="refresh">Refresh</string>
-    <string-array name="currenciesBase">
-        <item>EUR</item>
-    </string-array>
     <string-array name="currencies">
+        <item>AUD</item>
+        <item>CAD</item>
+        <item>CHF</item>
         <item>EUR</item>
-        <item>USD</item>
         <item>GBP</item>
+        <item>JPY</item>
+        <item>KRW</item>
+        <item>NZD</item>
+        <item>USD</item>
         <item>VND</item>
     </string-array>
 </resources>
