@@ -21,12 +21,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,16 +46,11 @@ public class Fragment1 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Spinner spinner1;
-    private Spinner spinner2;
-    private Spinner spinner3;
-    private Spinner spinner4;
-    private EditText et1;
-    private EditText et2;
-    private EditText et3;
-    private EditText et4;
-    public Double[] rates = {1.0, 0.0, 0.0, 0.0};
-    ArrayList<EditText> etArray = new ArrayList<EditText>();
+    private Spinner spinner1, spinner2, spinner3, spinner4;
+    private EditText et1, et2, et3, et4;
+    private Double[] rates = {1.0, 0.0, 0.0, 0.0};
+    private ArrayList<EditText> etArray = new ArrayList<>();
+    private ArrayList<Spinner> spArray = new ArrayList<>();
 
     public Fragment1() {
         // Required empty public constructor
@@ -90,7 +84,7 @@ public class Fragment1 extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         LayoutInflater themedInflater;
@@ -107,21 +101,35 @@ public class Fragment1 extends Fragment {
             spinnerLayout = R.layout.spinner_light;
             spinnerColor = R.color.black;
         }
+        
+        variablesSetup(view);
+        spinnerSetup(spinnerLayout, spinnerColor);
+        textChanged();
+
+        return view;
+    }
+
+    private void variablesSetup(View view)
+    {
         spinner1 = (Spinner) view.findViewById(R.id.currencySpinner1);
         spinner2 = (Spinner) view.findViewById(R.id.currencySpinner2);
         spinner3 = (Spinner) view.findViewById(R.id.currencySpinner3);
         spinner4 = (Spinner) view.findViewById(R.id.currencySpinner4);
+
         et1 = (EditText) view.findViewById(R.id.input1);
         et2 = (EditText) view.findViewById(R.id.output2);
         et3 = (EditText) view.findViewById(R.id.output3);
         et4 = (EditText) view.findViewById(R.id.output4);
+
         etArray.add(et1);
         etArray.add(et2);
         etArray.add(et3);
         etArray.add(et4);
-        spinnerSetup(spinnerLayout, spinnerColor);
-        textChanged();
-        return view;
+
+        spArray.add(spinner1);
+        spArray.add(spinner2);
+        spArray.add(spinner3);
+        spArray.add(spinner4);
     }
 
     private void textChanged() {
@@ -140,18 +148,15 @@ public class Fragment1 extends Fragment {
             public void afterTextChanged(Editable s) {
                 try {
                     if (et1 == null || TextUtils.isEmpty(et1.getText().toString())) {
-                        et2.setText("");
-                        et3.setText("");
-                        et4.setText("");
+
+                        for(int i = 1; i <= 3; ++i)
+                            etArray.get(i).setText("");
+                        
                         return;
                     }
-                    Double temp;
-                    temp = (Double) Double.valueOf(et1.getText().toString()) * rates[1];
-                    et2.setText(temp.toString());
-                    temp = (Double) Double.valueOf(et1.getText().toString()) * rates[2];
-                    et3.setText(temp.toString());
-                    temp = (Double) Double.valueOf(et1.getText().toString()) * rates[3];
-                    et4.setText(temp.toString());
+
+                    for(int i = 1; i <= 3; ++i)
+                        exchange(i);
                 } catch (Exception e) {
                     Log.e("Main", e.toString());
                 }
@@ -159,30 +164,28 @@ public class Fragment1 extends Fragment {
         });
     }
 
-    private void getApiResult(String currencyRate, Integer index) {
+    private void getApiResult(String currencyRate, int index) {
 
         String url = "http://api.exchangeratesapi.io/v1/latest?access_key=5baddb25fdd667935c4ee6fe368e9328";
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    if (etArray.get(index) == null || TextUtils.isEmpty(etArray.get(index).toString())) {
-                        Log.e("Error", "Somethingwrong");
-                        return;
-                    }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+            try {
 
-                    response = response.getJSONObject("rates");
-                    rates[index] = response.getDouble(currencyRate);
-                    Toast.makeText(getContext(), ((Double) response.getDouble(currencyRate)).toString(), Toast.LENGTH_SHORT).show();
-
-                    String etText = etArray.get(index).getText().toString();
-                    Double etValue = Double.valueOf(etText);
-                    etText = ((Double) (etValue * rates[index])).toString();
-                    etArray.get(index).setText(etText);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                // Check if current EditText is empty or null
+                if (etArray.get(index) == null || TextUtils.isEmpty(etArray.get(index).toString()) || index < 0) {
+                    Log.e("EditText Error", "EditText Missing");
+                    return;
                 }
+
+                // Get the exchange rate value for the current currency selection
+                // with base is Euro
+                response = response.getJSONObject("rates");
+                rates[index] = response.getDouble(currencyRate);
+
+                exchange(index);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -194,90 +197,45 @@ public class Fragment1 extends Fragment {
     }
 
     private void spinnerSetup(int spinnerLayout, int color) {
-        ArrayAdapter adapter1 = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.currenciesBase, spinnerLayout);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner1.setAdapter(adapter1);
-        spinner1.setSelection(0, true);
-        spinner1.getBackground().setColorFilter(getResources().getColor(color), PorterDuff.Mode.SRC_ATOP);
 
-        ArrayAdapter adapter2 = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.currencies, spinnerLayout);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
-        spinner2.setSelection(1, true);
-        spinner2.getBackground().setColorFilter(getResources().getColor(color), PorterDuff.Mode.SRC_ATOP);
+        for(int i = 0 ; i < 4; ++i){
+            final int index = i;
+            ArrayAdapter adapter;
+            Spinner sp;
 
-        ArrayAdapter adapter3 = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.currencies, spinnerLayout);
-        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner3.setAdapter(adapter3);
-        spinner3.setSelection(2, true);
-        spinner3.getBackground().setColorFilter(getResources().getColor(color), PorterDuff.Mode.SRC_ATOP);
+            if(index == 0)
+                adapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.currenciesBase, spinnerLayout);
+            else
+                adapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.currencies, spinnerLayout);
 
-        ArrayAdapter adapter4 = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.currencies, spinnerLayout);
-        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner4.setAdapter(adapter4);
-        spinner4.setSelection(3, true);
-        spinner4.getBackground().setColorFilter(getResources().getColor(color), PorterDuff.Mode.SRC_ATOP);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp = spArray.get(index);
+            sp.setAdapter(adapter);
+            sp.setSelection(index, true);
+            sp.getBackground().setColorFilter(getResources().getColor(color), PorterDuff.Mode.SRC_ATOP);
+
+            spArray.get(index).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String baseCurrency = parent.getItemAtPosition(position).toString();
+                    getApiResult(baseCurrency, index);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
 
         getApiResult("USD", 1);
         getApiResult("GBP", 2);
         getApiResult("VND", 3);
+    }
 
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String baseCurrency = parent.getItemAtPosition(position).toString();
-//                getApiResult(baseCurrency, 0);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String baseCurrency = parent.getItemAtPosition(position).toString();
-                getApiResult(baseCurrency, 1);
-                getApiResult(baseCurrency, 2);
-                getApiResult(baseCurrency, 3);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String baseCurrency = parent.getItemAtPosition(position).toString();
-                getApiResult(baseCurrency, 1);
-                getApiResult(baseCurrency, 2);
-                getApiResult(baseCurrency, 3);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinner4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String baseCurrency = parent.getItemAtPosition(position).toString();
-                getApiResult(baseCurrency, 1);
-                getApiResult(baseCurrency, 2);
-                getApiResult(baseCurrency, 3);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+    private void exchange(int index)
+    {
+        double convertedValue = (Double) Double.valueOf(et1.getText().toString()) * rates[index];
+        etArray.get(index).setText(String.valueOf(convertedValue));
     }
 }
