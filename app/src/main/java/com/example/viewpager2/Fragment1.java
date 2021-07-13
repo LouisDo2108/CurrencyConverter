@@ -230,6 +230,7 @@ public class Fragment1 extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(getContext(), "API Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please press refresh! Sincerely", Toast.LENGTH_SHORT).show();
                 }
             });
             return;
@@ -256,6 +257,7 @@ public class Fragment1 extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(getContext(), "API Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please press refresh! Sincerely", Toast.LENGTH_SHORT).show();
                 }
             });
             MySingleton.getInstance(getContext()).addToRequestQueue(request);
