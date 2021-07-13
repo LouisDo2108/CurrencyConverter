@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         pager2.setPageTransformer(new DepthPageTransformer()/*new ZoomOutPageTransformer()*/);
 
         tabLayout.addTab(tabLayout.newTab().setText("Currency Converter"));
-        tabLayout.addTab(tabLayout.newTab().setText("Popular Exchange Rate Charts"));
+        tabLayout.addTab(tabLayout.newTab().setText("Popular Currency Exchange"));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @SuppressLint("ResourceAsColor")

@@ -281,12 +281,4 @@ public class Fragment1 extends Fragment {
         double convertedValue = (Double) Double.valueOf(et1.getText().toString()) * rates[index];
         etArray.get(index).setText(String.valueOf(convertedValue));
     }
-
-//    public void darkMode(MenuItem item) {
-//        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//        } else {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//        }
-//    }
 }

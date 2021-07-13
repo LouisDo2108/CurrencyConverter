@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_marginBottom="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/exchange"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+
+    <TextView
+        android:id="@+id/daychange"
+        android:layout_width="@dimen/tvWidth"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+
+    <TextView
+        android:id="@+id/weeklychange"
+        android:layout_width="@dimen/tvWidth"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+
+    <TextView
+        android:id="@+id/monthlychange"
+        android:layout_width="53dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="@dimen/tvWidth"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

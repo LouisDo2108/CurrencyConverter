@@ -6,10 +6,16 @@
     tools:context=".Fragment2">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progress_circular"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/loremipsum"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </FrameLayout>

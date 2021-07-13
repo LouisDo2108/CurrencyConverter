@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tvWidth">50dp</dimen>
+    <dimen name="tvMarginLeft">10dp</dimen>
+    <dimen name="tvMarginLeftOthers">12dp</dimen>
+</resources>

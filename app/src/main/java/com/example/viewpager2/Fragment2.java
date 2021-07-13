@@ -1,10 +1,15 @@
 package com.example.viewpager2;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,7 +17,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +49,11 @@ public class Fragment2 extends Fragment {
 
     private LayoutInflater themedInflater;
     private View view;
+
+    private RecyclerView recyclerView;
+    private ParseAdapter adapter;
+    private ArrayList<ParseItem> parseItems = new ArrayList<>();
+    private ContentLoadingProgressBar progressBar;
 
     public Fragment2() {
         // Required empty public constructor
@@ -76,8 +98,91 @@ public class Fragment2 extends Fragment {
             view = themedInflater.inflate(R.layout.fragment_2, container, false);
         }
         setHasOptionsMenu(true);
+
+        progressBar = view.findViewById(R.id.progress_circular);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        parseItems.add(new ParseItem("Major", "Price", "Day",
+                "Weekly", "Monthly", "Date"));
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ParseAdapter(parseItems, getContext());
+        recyclerView.setAdapter(adapter);
+
+        Content content = new Content();
+        content.execute();
         return view;
     }
+
+    private class Content extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            parseItems.clear();
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String exchange = "", price = "", nch = "",
+                    daychange = "", weeklychange = "", monthlychange = "",
+                    YTD = "", date = "";
+
+            try {
+                String url = "https://tradingeconomics.com/currencies";
+                Document doc = Jsoup.connect(url).get();
+
+                Elements rows = doc.select("#aspnetForm > div.container > div > div.col-lg-8.col-md-9 > div:nth-child(5) > " +
+                        "div > table > tbody > tr");
+                for (int i = 1; i < rows.size(); ++i) {
+                    Element row = rows.get(i);
+                    exchange = row.select("td.datatable-item-first > a > b").text();
+                    Log.e("exchange", exchange);
+
+                    price = row.select("#p").text();
+                    Log.e("price", price);
+
+                    daychange = row.select("#pch").text();
+                    Log.e("Daychange", daychange);
+
+                    weeklychange = row.select("td:nth-child(6)").text();
+                    Log.e("weeklychange", weeklychange);
+
+                    monthlychange = row.select("td:nth-child(7)").text();
+                    Log.e("monthlychange", monthlychange);
+
+                    date = row.select("#date").text();
+                    Log.e("date", date);
+
+                    parseItems.add(new ParseItem(exchange, price, daychange, weeklychange,
+                            monthlychange, date));
+                    Log.e("STT", String.valueOf(i));
+                }
+
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+                Log.e("Not Completed", "Something Wrong");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            progressBar.setVisibility(View.GONE);
+            progressBar.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
+            adapter.notifyDataSetChanged();
+            Toast.makeText(getContext(), "New data arrived", Toast.LENGTH_SHORT).show();
+            super.onPostExecute(unused);
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
@@ -108,6 +213,7 @@ public class Fragment2 extends Fragment {
     }
 
     public void refresh(MenuItem item) {
-        Toast.makeText(getContext(), "Refresh2", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Refreshing. Please be patient", Toast.LENGTH_SHORT).show();
+        new Content().execute();
     }
 }
