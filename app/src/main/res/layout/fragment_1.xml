@@ -22,7 +22,7 @@
                 android:id="@+id/input1"
                 style="@style/input"
                 android:inputType="numberDecimal|number"
-                android:maxLength="12"
+                android:maxLength="15"
                 android:selectAllOnFocus="true"
                 android:text="0.0" />
 
@@ -40,8 +40,8 @@
                 android:id="@+id/output2"
                 style="@style/input"
                 android:inputType="none"
-                android:maxLength="12"
-                android:focusableInTouchMode="true"
+                android:maxLength="15"
+                android:focusable="false"
                 android:text="0.0" />
 
             <Spinner
@@ -58,8 +58,8 @@
                 android:id="@+id/output3"
                 style="@style/input"
                 android:inputType="none"
-                android:maxLength="12"
-                android:selectAllOnFocus="true"
+                android:maxLength="15"
+                android:focusable="false"
                 android:text="0.0" />
 
             <Spinner
@@ -76,8 +76,7 @@
                 android:id="@+id/output4"
                 style="@style/input"
                 android:inputType="none"
-                android:maxLength="12"
-                android:selectAllOnFocus="true"
+                android:focusable="false"
                 android:text="0.0" />
 
             <Spinner

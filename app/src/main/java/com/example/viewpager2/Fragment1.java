@@ -53,6 +53,7 @@ public class Fragment1 extends Fragment {
     private Spinner spinner1, spinner2, spinner3, spinner4;
     private EditText et1, et2, et3, et4;
     private Double[] rates = {1.0, 0.0, 0.0, 0.0};
+    private Double[] values = {0.0, 0.0, 0.0, 0.0};
     private int[] curID = {0, 1, 2, 3};
     private ArrayList<EditText> etArray = new ArrayList<>();
     private ArrayList<Spinner> spArray = new ArrayList<>();
@@ -189,9 +190,13 @@ public class Fragment1 extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    if (etArray.get(index) == null || TextUtils.isEmpty(etArray.get(index).getText().toString())) {
-                        for (int j = 1; j < 4; ++j)
-                                etArray.get(j).setText("0.0");
+                    if (etArray.get(index) == null || TextUtils.isEmpty(etArray.get(index).getText().toString())
+                            || etArray.get(index).getText().toString().trim().length() == 0) {
+                        values[0] = 0.0;
+                        for (int j = 1; j < 4; ++j) {
+                            etArray.get(j).setText("0.0");
+                            values[j] = 0.0;
+                        }
                         return;
                     }
                     exchange();
@@ -202,53 +207,29 @@ public class Fragment1 extends Fragment {
         });
     }
 
-//    private void updateRates(){
-//        for(int i = 1; i <= 3; ++i)
-//            exchange(i);
-//    }
-
     private void getApiResult(int changedIndex) {
         String baseCurrency = (String) spArray.get(0).getItemAtPosition(curID[0]).toString();
-        if(changedIndex != 0)
-        {
-            String alterCurrency = (String) spArray.get(changedIndex).getItemAtPosition(curID[changedIndex]).toString();
-            String q = baseCurrency + '_' + alterCurrency;
-            String url = "https://free.currconv.com/api/v7/convert?q=" + q + "&compact=ultra&apiKey=e9a4c7cd80676c0b31f2";
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
-                try {
-                    // Check if current EditText is empty or null
-                    if (etArray.get(changedIndex) == null || TextUtils.isEmpty(etArray.get(changedIndex).toString())) {
-                        Log.e("EditText Error", "EditText Missing");
-                        return;
-                    }
 
-                    rates[changedIndex] = (Double) response.getDouble(q);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getContext(), "API Error", Toast.LENGTH_SHORT).show();
-                }
-            });
-            return;
-        }
         for (int i = 0; i < 4; i++) {
             final int index = i;
             String alterCurrency = (String) spArray.get(index).getItemAtPosition(curID[i]).toString();
             String q = baseCurrency + '_' + alterCurrency;
-            String url = "https://free.currconv.com/api/v7/convert?q=" + q + "&compact=ultra&apiKey=e9a4c7cd80676c0b31f2";
+            String url = "https://free.currconv.com/api/v7/convert?q=" + q + "&compact=ultra&apiKey=36f801b24ec9821b3268";
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
                 try {
                     // Check if current EditText is empty or null
-                    if (etArray.get(index) == null || TextUtils.isEmpty(etArray.get(index).toString())) {
+                    if (etArray.get(index) == null) {
                         Log.e("EditText Error", "EditText Missing");
                         return;
                     }
-
+                    if (etArray.get(index).toString().matches("")) {
+                        etArray.get(index).setSelected(false);
+                        etArray.get(index).setText("0.0");
+                        values[index] = 0.0;
+                    }
                     // Get the exchange rate value for the current currency selection
                     rates[index] = (Double) response.getDouble(q);
+                    exchange();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -283,6 +264,7 @@ public class Fragment1 extends Fragment {
                     String baseCurrency = parent.getItemAtPosition(position).toString();
                     curID[index] = position;
                     getApiResult(index);
+                    Log.e("pass getApiRes:", "Check");
                     exchange();
                 }
 
@@ -292,31 +274,25 @@ public class Fragment1 extends Fragment {
                 }
             });
         }
-
-//        getApiResult("USD", 1);
-//        getApiResult("GBP", 2);
-//        getApiResult("VND", 3);
     }
 
     private void exchange() // take the current editText at index as the base value, multiply it by rates of the other threes
     {
         EditText baseEt = (EditText) etArray.get(0);
-        if (baseEt == null || TextUtils.isEmpty(baseEt.toString())) {
+        if (baseEt == null || baseEt.getText().toString().isEmpty()) {
+            values[0] = 0.0;
+            for (int i = 1; i < 4; i++) {
+                etArray.get(i).setText("0.0");
+                values[i] = 0.0;
+            }
             Log.e("EditText Error", "EditText Missing");
             return;
         }
-        double baseValue = (Double) Double.valueOf(baseEt.getText().toString());
+
+        values[0] = Double.valueOf(baseEt.getText().toString());
         for (int i = 1; i < 4; i++) {
-                double convertedValue = baseValue * rates[i];
-                etArray.get(i).setText(String.valueOf(convertedValue));
+            values[i] = values[0] * rates[i];
+            etArray.get(i).setText(String.valueOf(values[i]));
         }
     }
-
-//    public void darkMode(MenuItem item) {
-//        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//        } else {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//        }
-//    }
 }
