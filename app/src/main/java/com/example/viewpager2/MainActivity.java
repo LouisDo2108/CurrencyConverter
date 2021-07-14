@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm, getLifecycle());
         pager2.setAdapter(adapter);
-        pager2.setPageTransformer(new DepthPageTransformer()/*new ZoomOutPageTransformer()*/);
+        pager2.setPageTransformer(new DepthPageTransformer()); //new ZoomOutPageTransformer()
 
         tabLayout.addTab(tabLayout.newTab().setText("Currency Converter"));
         tabLayout.addTab(tabLayout.newTab().setText("Popular Currency Exchange"));

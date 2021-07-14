@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_marginBottom="15dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/exchange"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="5dp"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+        <TextView
+            android:id="@+id/exchange"
+            style="@style/textview_style"
+            android:layout_width="60dp"
+            android:layout_marginLeft="5dp"
+            android:text="Major"/>
 
-    <TextView
-        android:id="@+id/daychange"
-        android:layout_width="@dimen/tvWidth"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+        <TextView
+            android:id="@+id/price"
+            style="@style/textview_style"
+            android:layout_width="60dp"
+            android:text="Price"/>
 
-    <TextView
-        android:id="@+id/weeklychange"
-        android:layout_width="@dimen/tvWidth"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+        <TextView
+            android:id="@+id/daychange"
+            style="@style/textview_style"
+            android:text="Daily"/>
 
-    <TextView
-        android:id="@+id/monthlychange"
-        android:layout_width="53dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+        <TextView
+            android:id="@+id/weeklychange"
+            style="@style/textview_style"
+            android:text="Weekly"/>
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="@dimen/tvWidth"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="@dimen/tvMarginLeftOthers"/>
+        <TextView
+            android:id="@+id/monthlychange"
+            style="@style/textview_style"
+            android:layout_width="53dp"
+            android:text="Monthly"/>
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/textview_style"
+            android:text="Date" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="4dp"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

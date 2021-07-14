@@ -1,5 +1,6 @@
 package com.example.viewpager2;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -17,16 +18,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,11 +48,10 @@ public class Fragment2 extends Fragment {
 
     private LayoutInflater themedInflater;
     private View view;
-
     private RecyclerView recyclerView;
     private ParseAdapter adapter;
-    private ArrayList<ParseItem> parseItems = new ArrayList<>();
     private ContentLoadingProgressBar progressBar;
+    private final ArrayList<ParseItem> parseItems = new ArrayList<>();
 
     public Fragment2() {
         // Required empty public constructor
@@ -87,22 +85,20 @@ public class Fragment2 extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
             themedInflater = LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.Theme_ViewPager2Night));
-            view = themedInflater.inflate(R.layout.fragment_2, container, false);
-        } else {
+        else
             themedInflater = LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.Theme_ViewPager2));
-            view = themedInflater.inflate(R.layout.fragment_2, container, false);
-        }
+
+        view = themedInflater.inflate(R.layout.fragment_2, container, false);
         setHasOptionsMenu(true);
 
         progressBar = view.findViewById(R.id.progress_circular);
         recyclerView = view.findViewById(R.id.recyclerView);
-        parseItems.add(new ParseItem("Major", "Price", "Day",
-                "Weekly", "Monthly", "Date"));
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -114,14 +110,15 @@ public class Fragment2 extends Fragment {
         return view;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class Content extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            parseItems.clear();
             progressBar.setVisibility(View.VISIBLE);
             progressBar.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
+            Toast.makeText(getContext(), "Fetching data", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -131,39 +128,30 @@ public class Fragment2 extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String exchange = "", price = "", nch = "",
-                    daychange = "", weeklychange = "", monthlychange = "",
-                    YTD = "", date = "";
+
+            String exchange, price, daychange, weeklychange, monthlychange, date;
 
             try {
                 String url = "https://tradingeconomics.com/currencies";
                 Document doc = Jsoup.connect(url).get();
-
-                Elements rows = doc.select("#aspnetForm > div.container > div > div.col-lg-8.col-md-9 > div:nth-child(5) > " +
+                Elements rows = doc.select("#aspnetForm > div.container > div >" +
+                        " div.col-lg-8.col-md-9 > div:nth-child(5) > " +
                         "div > table > tbody > tr");
+
                 for (int i = 1; i < rows.size(); ++i) {
                     Element row = rows.get(i);
+
                     exchange = row.select("td.datatable-item-first > a > b").text();
-                    Log.e("exchange", exchange);
-
                     price = row.select("#p").text();
-                    Log.e("price", price);
-
                     daychange = row.select("#pch").text();
-                    Log.e("Daychange", daychange);
-
                     weeklychange = row.select("td:nth-child(6)").text();
-                    Log.e("weeklychange", weeklychange);
-
                     monthlychange = row.select("td:nth-child(7)").text();
-                    Log.e("monthlychange", monthlychange);
-
                     date = row.select("#date").text();
-                    Log.e("date", date);
 
                     parseItems.add(new ParseItem(exchange, price, daychange, weeklychange,
                             monthlychange, date));
-                    Log.e("STT", String.valueOf(i));
+
+                    Log.d("Sucess", "Load data successed");
                 }
 
             } catch (IOException ioException) {
@@ -175,8 +163,10 @@ public class Fragment2 extends Fragment {
 
         @Override
         protected void onPostExecute(Void unused) {
+
             progressBar.setVisibility(View.GONE);
             progressBar.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
+
             adapter.notifyDataSetChanged();
             Toast.makeText(getContext(), "New data arrived", Toast.LENGTH_SHORT).show();
             super.onPostExecute(unused);
@@ -205,14 +195,15 @@ public class Fragment2 extends Fragment {
     }
 
     public void darkMode(MenuItem item) {
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        } else {
+        else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
     }
 
     public void refresh(MenuItem item) {
+        parseItems.clear();
         Toast.makeText(getContext(), "Refreshing. Please be patient", Toast.LENGTH_SHORT).show();
         new Content().execute();
     }

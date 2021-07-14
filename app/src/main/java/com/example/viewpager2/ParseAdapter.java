@@ -1,12 +1,9 @@
 package com.example.viewpager2;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class ParseAdapter extends RecyclerView.Adapter<ParseAdapter.ViewHolder> {
-    private Context context;
+    private final Context context;
     private final ArrayList<ParseItem> parseItems;
 
     public ParseAdapter(ArrayList<ParseItem> parseItems, Context context) {
@@ -36,6 +33,7 @@ public class ParseAdapter extends RecyclerView.Adapter<ParseAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ParseAdapter.ViewHolder holder, int position) {
+
         ParseItem parseItem = parseItems.get(position);
 
         holder.exchange.setText(parseItem.getExchange());
@@ -44,32 +42,26 @@ public class ParseAdapter extends RecyclerView.Adapter<ParseAdapter.ViewHolder> 
         holder.weeklyChange.setText(parseItem.getWeeklyChange());
         holder.monthlyChange.setText(parseItem.getMonthlyChange());
         holder.date.setText(parseItem.getDate());
-        if(position != 0)
-            setTextColor(holder);
+
+        setTextColor(holder);
     }
 
     private void setTextColor(ViewHolder holder)
     {
-        if(holder.dayChange.getText().toString().contains("-")){
+        if(holder.dayChange.getText().toString().contains("-"))
             holder.dayChange.setTextColor(ContextCompat.getColor(context, R.color.red));
-        }
-        else {
+        else
             holder.dayChange.setTextColor(ContextCompat.getColor(context, R.color.green));
-        }
 
-        if(holder.weeklyChange.getText().toString().contains("-")){
+        if(holder.weeklyChange.getText().toString().contains("-"))
             holder.weeklyChange.setTextColor(ContextCompat.getColor(context, R.color.red));
-        }
-        else {
+        else
             holder.weeklyChange.setTextColor(ContextCompat.getColor(context, R.color.green));
-        }
 
-        if(holder.monthlyChange.getText().toString().contains("-")){
+        if(holder.monthlyChange.getText().toString().contains("-"))
             holder.monthlyChange.setTextColor(ContextCompat.getColor(context, R.color.red));
-        }
-        else {
+        else
             holder.monthlyChange.setTextColor(ContextCompat.getColor(context, R.color.green));
-        }
     }
 
     @Override

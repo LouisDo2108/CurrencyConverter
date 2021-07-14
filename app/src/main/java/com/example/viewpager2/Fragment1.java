@@ -98,15 +98,14 @@ public class Fragment1 extends Fragment {
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             themedInflater = LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.Theme_ViewPager2Night));
-            view = themedInflater.inflate(R.layout.fragment_1, container, false);
             spinnerLayout = R.layout.spinner_dark;
             spinnerColor = R.color.white;
         } else {
             themedInflater = LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.Theme_ViewPager2));
-            view = themedInflater.inflate(R.layout.fragment_1, container, false);
             spinnerLayout = R.layout.spinner_light;
             spinnerColor = R.color.black;
         }
+        view = themedInflater.inflate(R.layout.fragment_1, container, false);
 
         variablesSetup(view);
         setHasOptionsMenu(true);
@@ -229,7 +228,7 @@ public class Fragment1 extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getContext(), "API Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Loading data failed", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "Please press refresh! Sincerely", Toast.LENGTH_SHORT).show();
                 }
             });
