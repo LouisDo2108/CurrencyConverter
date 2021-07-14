@@ -1,4 +1,4 @@
-package com.example.viewpager2;
+package com.example.CurrencyConverter;
 
 import org.junit.Test;
 

@@ -1,10 +1,9 @@
-package com.example.viewpager2;
+package com.example.CurrencyConverter;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -31,7 +30,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -111,6 +109,7 @@ public class Fragment1 extends Fragment {
         variablesSetup(view);
         setHasOptionsMenu(true);
         spinnerSetup(spinnerLayout, spinnerColor);
+        et1.requestFocus();
         textChanged();
         getApiResult(0);
         return view;
@@ -135,6 +134,12 @@ public class Fragment1 extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh(null);
     }
 
     public void darkMode(MenuItem item) {
@@ -209,12 +214,13 @@ public class Fragment1 extends Fragment {
     private void getApiResult(int changedIndex) {
         String baseCurrency = (String) spArray.get(0).getItemAtPosition(curID[0]).toString();
 
-        for (int i = 0; i < 4; i++) {
-            final int index = i;
-            String alterCurrency = (String) spArray.get(index).getItemAtPosition(curID[i]).toString();
+        if(changedIndex != 0)
+        {
+            int index = changedIndex;
+            String alterCurrency = (String) spArray.get(index).getItemAtPosition(curID[index]).toString();
             String q = baseCurrency + '_' + alterCurrency;
-            String url = "https://free.currconv.com/api/v7/convert?q=" + q + "&compact=ultra&apiKey=e9a4c7cd80676c0b31f2";
-                    //36f801b24ec9821b3268";
+            String url = "https://free.currconv.com/api/v7/convert?q=" + q + "&compact=ultra&apiKey=36f801b24ec9821b3268";
+            //36f801b24ec9821b3268" "e9a4c7cd80676c0b31f2" or 08a156553a9a19df6cc6;
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
                 try {
                     // Check if current EditText is empty or null
@@ -240,6 +246,40 @@ public class Fragment1 extends Fragment {
                 }
             });
             MySingleton.getInstance(getContext()).addToRequestQueue(request);
+        }
+        else {
+            for (int i = 0; i < 4; i++) {
+                final int index = i;
+                String alterCurrency = (String) spArray.get(index).getItemAtPosition(curID[i]).toString();
+                String q = baseCurrency + '_' + alterCurrency;
+                String url = "https://free.currconv.com/api/v7/convert?q=" + q + "&compact=ultra&apiKey=08a156553a9a19df6cc6";
+                //36f801b24ec9821b3268" or "e9a4c7cd80676c0b31f2";
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+                    try {
+                        // Check if current EditText is empty or null
+                        if (etArray.get(index) == null) {
+                            Log.e("EditText Error", "EditText Missing");
+                            return;
+                        }
+                        if (etArray.get(index).toString().matches("")) {
+                            etArray.get(index).setSelected(false);
+                            etArray.get(index).setText("0.0");
+                            values[index] = 0.0;
+                        }
+                        // Get the exchange rate value for the current currency selection
+                        rates[index] = (Double) response.getDouble(q);
+                        exchange();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getContext(), "API Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                MySingleton.getInstance(getContext()).addToRequestQueue(request);
+            }
         }
     }
 

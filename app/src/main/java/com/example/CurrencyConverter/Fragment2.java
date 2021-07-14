@@ -1,4 +1,4 @@
-package com.example.viewpager2;
+package com.example.CurrencyConverter;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
@@ -204,7 +204,6 @@ public class Fragment2 extends Fragment {
 
     public void refresh(MenuItem item) {
         parseItems.clear();
-        Toast.makeText(getContext(), "Refreshing. Please be patient", Toast.LENGTH_SHORT).show();
         new Content().execute();
     }
 }

@@ -1,8 +1,7 @@
-package com.example.viewpager2;
+package com.example.CurrencyConverter;
 
 import android.view.View;
 
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 public class DepthPageTransformer implements ViewPager2.PageTransformer {

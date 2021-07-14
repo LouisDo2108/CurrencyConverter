@@ -1,12 +1,10 @@
-package com.example.viewpager2;
+package com.example.CurrencyConverter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-
-import java.util.Enumeration;
 
 public class FragmentAdapter extends FragmentStateAdapter {
     private static final int NUM_PAGES = 2;

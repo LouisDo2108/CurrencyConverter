@@ -16,13 +16,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="start">
 
             <EditText
                 android:id="@+id/input1"
                 style="@style/input"
                 android:inputType="numberDecimal|number"
                 android:maxLength="15"
+                android:focusable="true"
                 android:selectAllOnFocus="true"
                 android:text="0.0" />
 

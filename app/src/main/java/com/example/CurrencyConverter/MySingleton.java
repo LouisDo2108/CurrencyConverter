@@ -1,11 +1,9 @@
-package com.example.viewpager2;
+package com.example.CurrencyConverter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 public class MySingleton {

@@ -1,4 +1,4 @@
-package com.example.viewpager2;
+package com.example.CurrencyConverter;
 
 public class ParseItem {
     private String exchange, price, dayChange, weeklyChange, monthlyChange, date;
